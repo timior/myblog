@@ -1,9 +1,15 @@
 ---
 title: 个人博客搭建过程随手笔记
 date: 2017-05-20 02:50:38
-tags:
+tags: Hexo,github
+category: logs
 ---
+个人博客的搭建日志，记录博客搭建过程的中的一些心得，由衷感谢Grok的博客对我的指导。
+
+<!--more-->
+
 ## 系统环境
+
 开发平台：Windows
 开发工具：[Hexo](https://hexo.io/)
 博客主题：[Next](http://theme-next.iissnan.com/)
@@ -24,17 +30,18 @@ tags:
 安装模块时只要用 cnpm 替换 npm 即可，会直接从淘宝 NPM 安装，安装命令形如：cnpm install [name]
 
 ## Hexo 博客压缩优化
+
 Hexo主程序并不对生成的页面进行优化，致使页面内容稀疏，由于网面大小的会直接影响网页打开的速度，因此对页面进行压缩是有必要的。简单来说有两种可选方式进行生成网页的压缩优化。
 方式一：使用gulp插件，自行编写优化脚本，如[hexo博客－性能优化](http://www.cnblogs.com/jarson-7426/p/5660424.html)
 方式二：使用Hexo软件的配套插件，如：[hexo-neat](https://github.com/rozbo/hexo-neat) 、[hexo-all-minifier](https://github.com/chenzhutian/hexo-all-minifier)、[hexo-filter-cleanup](https://github.com/mamboer/hexo-filter-cleanup)
 
-本博客才用的是[hexo-neat](https://github.com/rozbo/hexo-neat)插件
+本博客采用的是[hexo-neat](https://github.com/rozbo/hexo-neat)插件
 
 1、插件有两种下载方式
 方式一：使用密令行
  ``` bash
 $ npm install hexo-neat --save
-```
+ ```
 方式二：登录插件的commit分支页面（如[hexo-neat](https://github.com/rozbo/hexo-neat/commits/master)），手工下插件并将其解压到 "blog根目录\node_modules" 目录下, 注意插件前缀是"hexo-..."
 
 2、下载完插件后，修改站点的配置文件 _config.yml ,加入相关的压缩配置
@@ -74,22 +81,40 @@ neat_js:
     "hexo-server": "^0.2.0",
     "stream-to-array": "^2.3.0"
   }
-```
+ ```
 如果增加依赖后，使用 hexo generate 指令生成页面时报错找不到 stream-to-array 等依赖，使用cnpm直接安装即可
 ``` bash
 $ cnpm install stream-to-array --save
 ```
+
+
 ## git管理博客
+
 使用git工具对blog文件进行管理有两个必要性
 其一：当修改博客出错时可以用来恢复。
 其二：使用 hexo deploy 发布的博客，有许多内容并不会上传到github上面，而仅仅存储在本地，因此只能在同一台主机上编辑博客。
 
 使用git管理博客步骤如下：
-1、打开git bush，进入博客根目录执行git init
+由于hexo也是使用git工具进行部署的，因此如果在博客根目录下使用 git init 来创建Repository，会和hexo创建的Repository发生冲突，因此可采用 父-子 目录的方式进行规避，将Hexo创建的博客作为子目录，至于git管理的父目录下，结构示意如下：
+ ``` bash
++--myblog     			#git 文件管理目录
+|	|
+|	+ --blog			#Hexo 博客目录
+|	|	|
+|	|	source
+|	|	_config.yml
+|	|	...
+|	|
+|	+ --.git			#git参数文件
+|	|	|
+|	|	index
+|	|
+ ```
+1、打开git bush，进入git根目录/myblog执行git init
  ``` bash
 $ git init
-```
-2、修改博客根目录下的 .gitignore 文件，仅保留public/，该文件是hexo生成的博客页面文件，不必要使用git管理
+ ```
+2、修改博客根目录下的 myblog/bolg/.gitignore 文件，仅保留public/，该文件是hexo生成的博客页面文件，不必要使用git管理（经过测试，这个步不做也是可行的）
  ``` bash
 #.DS_Store
 #Thumbs.db
@@ -98,15 +123,24 @@ $ git init
 #node_modules/
 public/
 #.deploy_git/
+ ```
+3、使用git add . 添加所有文件，如果 git 报错 Filename too long ，执行 git config --global core.longpaths true 修改git配置即可，如果有依赖文件目录添加失败，检查该目录下是否存在 .git文件夹，如果存在则说明该目录下的文件是属于另外一个repository仓库的，一种可行的解决方式是直接删除该目录，登录github直接下载该依赖文件，将其替换掉即可。（凡是使用 git clone https://github.com/iissnan/hexo-theme-next themes/next 等密令下载的插件都包含 .git文件夹，均需登录 githut 直接下压缩包文件进行替换）
+4、使用git commit -m "first commmit"计较
+5、登录github，为博客的源文件创建一个空的仓库，按照github提示，将文件上传到github
+5、其他主机登录步骤
+	一：搭建好Hexo环境，创建博客根目录
+	二：使用git使用git clone https://github.com/xxx/myblog.git 命令下载git上传的文件即可。
+	注意：整个过程都无需再次使用 hexo init 指令，来初始化文件夹，安装好hexo后只需执行 npm install 密令安装来安装hexo server
+
+
+
+## Markdown 编辑工具[Typora](https://www.typora.io/)
+
+由于Hexo不能够在页面上实时显示正在编写的文档，每次查看编写效果都需要执行如下指令，繁琐而不直观。
+
+``` codes
+$ hexo clean
+$ hexo generate
+$ hexo server
 ```
-3、使用git add .添加所有文件，如果 git 报错 Filename too long ，执行 git config --global core.longpaths true 修改git配置即可
-
-4、如果有文件目录添加失败，检查该目录下是否存在 .git 文件夹如下所示，删除该.git文件夹，只保留博客根目录下的.git文件夹即可。
- ``` bash
-$ git add G:\\GitTools\\Blog\\blog\\themes\\next\\_config.yml
-fatal: Pathspec 'G:\GitTools\Blog\blog\themes\next\_config.yml' is in submodule 'themes/next'
-```
-
-
-
 

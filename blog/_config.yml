@@ -91,6 +91,19 @@ neat_js:
     - '*.min.js'
 # Extensions
 ## Plugins: https://hexo.io/plugins/
+## Sherch Plugins
+algolia:
+  applicationID: JONB7VHMPI
+  apiKey: e229bef1cf98d8db2be90cd6f0172e08
+  adminApiKey: 65d7d549fd7b6c54129bd8792b0bc44f
+  indexName: blogindex
+  chunkSize: 5000
+## Local Search
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
 ## Themes: https://hexo.io/themes/
 theme: next
 
@@ -98,5 +111,8 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/timior/timior.github.io.git
+  #repo: https://github.com/timior/timior.github.io.git
+  repo:
+    github: git@github.com:timior/timior.github.io.git
+    coding: git@git.coding.net:timior/timior.git
   branch: master
