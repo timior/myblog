@@ -144,3 +144,49 @@ $ hexo generate
 $ hexo server
 ```
 
+
+## Hexo 页面底部注释
+由hexo的模板自动生成的页面，在底部默认会有版权和主体的注释，如图：
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_copyright_orignal.PNG)
+容易暴露个人智商，作为强迫症患者，简直无法忍受。经过查找，底框代码是在：blog\themes\next\layout\_partials\目录下的footer.swig文件里说明的，修改文件内容如下：
+``` codes
+<div class="copyright" >
+  {% set current = date(Date.now(), "YYYY") %}                
+  &copy; {% if theme.since and theme.since != current %} <i> {{ theme.since }} - <\i> {% endif %}
+  <span itemprop="copyrightYear"><i>{{ current }}</i></span>
+  <span class="with-love"> <i class="fa fa-{{ theme.authoricon }}"> </i> </span>
+  <span class="author" itemprop="copyrightHolder"> <i>Powered By - {{ config.author }} </i> </span>
+</div>
+
+{% if theme.copyright %}
+<div class="copyright">
+  <i>Contact Me&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</i>
+  <i><a target="_blank" rel="external" href="https://github.com/timior">https://github.com/timior</a></i>
+</div>
+{% endif %}
+```
+额外添加<i>标签，让其显示为斜体字，在 "|" 字符两边添加多个&nbsp，插入空格让其看上去更加简洁，最后显示效果如下:
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_copyright_new.PNG)
+
+## 评论系统插件
+Hexo的Neat主体里面已经集成了几种评论工具[插件](http://theme-next.iissnan.com/third-party-services.html)，个人先尝试了网易云跟帖，整体感觉并不好，因为网易留言回复采用的是”楼上楼“方式，可经过几轮回复留言区会变得一片混乱，跟本找不到谁是谁的留言，之后尝试了[来必力](https://livere.com/)，使用感觉还不错，留言回复采用的是“楼中楼”方式，直观清晰，具体可浏览本博客的留言区域。不过有个缺点，这个插件貌似不支持留言导入导出的功能，这意味着，一旦上了船就别想再跑了，此外这个插件是韩国的，我电脑所在电信网络，注册登录总是出现出现网络故障，无赖最后使用手机网络来注册登录，感觉手机网络还是很给力的。
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_qiniu_add7.PNG)
+
+## 博客图床-七牛云
+由于博客托管在github上面，加载速度本来就慢，如果还需加载大量的图片，那就更加无法忍受了，所以图床是必须要有的，见大家都推荐使用[七牛云](https://www.qiniu.com/)，尝试了下，加载速度还不错，步骤如下：
+### 一：注册七牛云，新建对象存储空间
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_qiniu_add6.PNG)
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_qiniu_add2.PNG)
+
+### 二：进入存储空间-内容管理-上传文件
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_qiniu_add3.PNG)
+
+在右边可以添加文件的前缀（先填写右侧的文件路径，再添加文件，就会给文件自动加上前缀）
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_qiniu_add5.PNG)
+
+### 三：图片的使用
+七牛云上上传的图片，可以在页面里直接使用，无需添加任何设置，复制图片路径，哪里要引用就粘哪，在Hexo的markdown里引用方式之一：```![](粘入复制的链接)```
+![](http://oqaxv1vwu.bkt.clouddn.com//image/blog/logs/blog_build/blog_qiniu_add4.PNG)
+
+
+## To be Continued...

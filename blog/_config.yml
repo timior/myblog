@@ -15,7 +15,8 @@ timezone: Asia/Shanghai
 url: http://yoursite.com
 root: /
 #permalink: :year/:month/:day/:title/
-permalink: :category/:title/
+#permalink: :category/:title/
+permalink: :title/
 permalink_defaults:
 
 # Directory
